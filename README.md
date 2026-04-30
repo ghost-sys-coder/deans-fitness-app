@@ -1,50 +1,118 @@
-# Welcome to your Expo app 👋
+# Deans Fitness App Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Production-grade AI-powered fitness and nutrition mobile application built with Expo, React Native, TypeScript, and Expo Router.
 
-## Get started
+## Product Scope
 
-1. Install dependencies
+The application supports four role-based areas:
 
-   ```bash
-   npm install
-   ```
+- `client`: onboarding, subscriptions, video classes, entitled video playback, workout progress, nutrition questionnaires, meal plans, grocery lists, consultations, add-ons, and payment history.
+- `trainer`: onboarding, class creation, protected media uploads, class management, enrolled clients, performance metrics, and earnings summaries.
+- `nutritionist`: onboarding, assigned nutrition orders, questionnaire review, custom meal plans, meal templates, grocery lists, consultations, and revenue summaries.
+- `admin`: user management, trainer/nutritionist approvals, classes, nutrition orders, products, plans, payments, entitlements, and reports.
 
-2. Start the app
+## Technical Stack
 
-   ```bash
-   npx expo start
-   ```
+- Expo
+- React Native
+- TypeScript
+- Expo Router
+- Supabase Auth, Postgres, Storage, and Edge Functions
+- TanStack Query
+- React Hook Form
+- Zod
+- expo-haptics
 
-In the output, you'll find options to open the app in a
+## Architecture Rules
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Use feature-based folders under `src/features`.
+- Use Expo Router only for route files and layouts under `app`.
+- Keep business logic out of screen files.
+- Do not call Supabase directly inside React components.
+- Use services for data access, hooks for orchestration, schemas for validation, and types for strict contracts.
+- Every React component file must contain exactly one React component.
+- Shared UI belongs in `src/shared/ui`.
+- Theme tokens belong in `src/shared/theme`; do not hard-code colors in screens.
+- Important screens must support loading, empty, error, and offline states.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Security Rules
 
-## Get a fresh project
+- Use Supabase Row Level Security for authorization.
+- Never trust frontend role state.
+- Never trust route params.
+- Never put Supabase service role keys in the mobile app.
+- Never put payment provider secret keys in the mobile app.
+- Never expose paid videos through public URLs.
+- Use signed URLs for protected media.
+- Feature access must rely on verified entitlements, not raw payment status.
 
-When you're ready, run:
+## Payments
 
-```bash
-npm run reset-project
+The app is subscription-based from launch and supports paid add-ons. Payment gateway logic must be abstracted behind a provider adapter.
+
+- Initial provider: DGateway
+- Future provider: I&M Bank gateway
+- Payment creation, verification, subscription changes, entitlement sync, and webhook handling must run through Supabase Edge Functions.
+- Do not create fake payment success states.
+- Do not unlock paid features without verified payment and a valid entitlement.
+
+## Current Structure
+
+```txt
+app/
+  (admin)/
+  (client)/
+  (nutritionist)/
+  (onboarding)/
+  (public)/
+  (trainer)/
+  _layout.tsx
+
+src/
+  app/
+    navigation/
+    providers/
+  shared/
+    hooks/
+    services/
+    theme/
+    types/
+    ui/
+    utils/
+  features/
+    admin/
+    auth/
+    classes/
+    entitlements/
+    media/
+    nutrition/
+    nutritionist/
+    onboarding/
+    payments/
+    profiles/
+    subscriptions/
+    trainer/
+    workout-progress/
+  edge-functions/
+
+supabase/
+  migrations/
+  policies/
+  seed/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+The current project setup intentionally contains structure and placeholders only. Screens, business logic, payment adapters, Supabase services, schemas, and route implementations should be added in later phases.
 
-## Learn more
+## Development
 
-To learn more about developing your project with Expo, look at the following resources:
+Install dependencies:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+```
 
-## Join the community
+Run TypeScript verification:
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npx tsc --noEmit
+```
