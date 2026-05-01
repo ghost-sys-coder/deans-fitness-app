@@ -35,6 +35,16 @@ The application supports four role-based areas:
 - Theme tokens belong in `src/shared/theme`; do not hard-code colors in screens.
 - Important screens must support loading, empty, error, and offline states.
 
+## Theme System
+
+Theme files live in `src/shared/theme`:
+
+- `tokens.ts`: shared spacing, radii, typography, opacity, and elevation tokens.
+- `themes.ts`: typed theme definitions for Titan Black, Vital White, and Pulse AI.
+- `ThemeProvider.tsx`: React provider that exposes `theme`, `themeName`, `tokens`, and `setTheme`.
+
+Selected theme is persisted locally with `@react-native-async-storage/async-storage`.
+
 ## Security Rules
 
 - Use Supabase Row Level Security for authorization.
@@ -45,6 +55,19 @@ The application supports four role-based areas:
 - Never expose paid videos through public URLs.
 - Use signed URLs for protected media.
 - Feature access must rely on verified entitlements, not raw payment status.
+
+## Environment
+
+Expo public environment variables are validated in `lib/env.ts`.
+
+Required mobile-safe variables:
+
+- `EXPO_PUBLIC_SUPABASE_URL`
+- `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Forbidden public variables include Supabase service/secret keys and payment provider secrets. Backend-only secrets must stay in Supabase Edge Functions or other secure server environments.
+
+The Supabase client is initialized in `lib/supabase.ts` with React Native-compatible auth session persistence.
 
 ## Payments
 
@@ -115,4 +138,10 @@ Run TypeScript verification:
 
 ```bash
 npx tsc --noEmit
+```
+
+Run lint:
+
+```bash
+npm run lint
 ```
