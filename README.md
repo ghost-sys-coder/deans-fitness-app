@@ -25,19 +25,19 @@ The application supports four role-based areas:
 
 ## Architecture Rules
 
-- Use feature-based folders under `src/features`.
+- Use feature-based folders under `source/features`.
 - Use Expo Router only for route files and layouts under `app`.
 - Keep business logic out of screen files.
 - Do not call Supabase directly inside React components.
 - Use services for data access, hooks for orchestration, schemas for validation, and types for strict contracts.
 - Every React component file must contain exactly one React component.
-- Shared UI belongs in `src/shared/ui`.
-- Theme tokens belong in `src/shared/theme`; do not hard-code colors in screens.
+- Shared UI belongs in `source/shared/ui`.
+- Theme tokens belong in `source/shared/theme`; do not hard-code colors in screens.
 - Important screens must support loading, empty, error, and offline states.
 
 ## Theme System
 
-Theme files live in `src/shared/theme`:
+Theme files live in `source/shared/theme`:
 
 - `tokens.ts`: shared spacing, radii, typography, opacity, and elevation tokens.
 - `themes.ts`: typed theme definitions for Titan Black, Vital White, and Pulse AI.
@@ -69,6 +69,14 @@ Forbidden public variables include Supabase service/secret keys and payment prov
 
 The Supabase client is initialized in `lib/supabase.ts` with React Native-compatible auth session persistence.
 
+## Database
+
+Initial schema migration:
+
+- `supabase/migrations/20260501000100_initial_schema.sql`
+
+The migration creates the first-version application tables, foreign keys, constraints, indexes, timestamp triggers, bootstrap admin profile handling, private RLS helper functions, and initial RLS policies. Direct payment and subscription state writes are intentionally left to secure backend execution paths.
+
 ## Payments
 
 The app is subscription-based from launch and supports paid add-ons. Payment gateway logic must be abstracted behind a provider adapter.
@@ -91,8 +99,8 @@ app/
   (trainer)/
   _layout.tsx
 
-src/
-  app/
+source/
+  core/
     navigation/
     providers/
   shared/
