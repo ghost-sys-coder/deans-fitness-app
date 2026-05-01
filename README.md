@@ -69,6 +69,29 @@ Forbidden public variables include Supabase service/secret keys and payment prov
 
 The Supabase client is initialized in `lib/supabase.ts` with React Native-compatible auth session persistence.
 
+## Auth Module
+
+Module 1 auth is implemented with Supabase Auth, Expo Router route groups, TanStack Query, React Hook Form, Zod, and Expo deep linking.
+
+Routes:
+
+- `app/(public)/sign-in.tsx`
+- `app/(public)/sign-up.tsx`
+- `app/(public)/forgot-password.tsx`
+- `app/(public)/auth-callback.tsx`
+- `app/(protected)/home.tsx`
+
+Auth rules:
+
+- Supabase calls live in `source/features/auth/services` and `source/features/profiles/services`.
+- Screens call hooks and compose UI only.
+- Profile reads use the server-backed `profiles` table.
+- Admin assignment is handled by the database bootstrap trigger, not frontend state.
+- OAuth redirect scheme is `deansfitness://auth-callback`.
+- Add `deansfitness://auth-callback` and `deansfitness://**` to Supabase Auth redirect URLs before testing OAuth.
+- Onboarding routes currently contain placeholder screens only; full onboarding belongs to the onboarding module.
+- Supabase auth storage uses AsyncStorage on device and a no-op adapter during static rendering.
+
 ## Database
 
 Initial schema migration:
